@@ -15,7 +15,7 @@ import java.util.Map;
 import static java.lang.Math.PI;
 
 /**
- * #	Developer: AgArtY M.C. (Vladimir Vladimirovich)                        #
+ * #	Developer: AgArtY M.C.                                                 #
  * #	E-mail: amc@agty.org                                                   #
  * #	Site: <a href="https://agty.org">https://agty.org</a>                  #
  * #	                                                                       #
