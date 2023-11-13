@@ -1,4 +1,4 @@
-package agty.libs;
+package org.agty.utils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -23,7 +23,7 @@ import static java.lang.Math.PI;
  * #	approval of the developer is forbidden.                                #
  */
 
-public class Funcs {
+public class AgtyUtils {
     private static HashMap<String, String> fileSizeLangRU = null;
     private static HashMap<String, String> fileSizeLangEN = null;
 
@@ -407,34 +407,6 @@ public class Funcs {
     }
 
     /**
-     * Преобразует массив в строку запроса
-     *
-     * @return array|null|string
-     */
-    public static String get_var(Params post, Params attr) {
-        if (post.get("e2:raw") != null) return post.get("e2:raw");
-
-        //Формируем из массива запрос вид
-
-        String string = "";
-
-        long i = 0;
-        for (Object key : post.instance().keySet()) {
-            String value = (String) post.instance().get(key);
-            if (attr.get("nohencode") == null) value = Funcs.hencode(value);
-            value = value.equals("") ? "NULL" : "'" + value + "'";
-
-            string += "`" + key + "` = " + value + ",";
-        }
-
-        return sub_str(string, 1);
-    }
-
-    public static String get_var(Params Params) {
-        return get_var(Params, new Params());
-    }
-
-    /**
      * Вспомогательная функция, которая очищает запрос where
      *
      *   //`id_news` = '5.0123'
@@ -482,7 +454,7 @@ public class Funcs {
         if (value == null || value.equals("")) {
             value = "IS NULL";
         } else {
-            value = "= '" + Funcs.hencode(value) + "'";
+            value = "= '" + AgtyUtils.hencode(value) + "'";
         }
         return "`" + field + "` " + value;
     }
@@ -581,6 +553,18 @@ public class Funcs {
         }
 
         return returns;
+    }
+
+    /**
+     * Возвращает случайное число из заданного диапазона.
+     *
+     * @param min минимальное значение.
+     * @param max максимальное значение.
+     * @return случайное число.
+     */
+    public static int rand(int min, int max) {
+        max -= min;
+        return (int) (Math.random() * ++max) + min;
     }
 }
 
