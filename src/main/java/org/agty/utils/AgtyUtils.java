@@ -24,6 +24,8 @@ import static java.lang.Math.PI;
  */
 
 public class AgtyUtils {
+    private static final String version = "1.7.1";
+
     private static HashMap<String, String> fileSizeLangRU = null;
     private static HashMap<String, String> fileSizeLangEN = null;
 
@@ -275,6 +277,53 @@ public class AgtyUtils {
      * @return
      */
     public static String date(String format) {
+
+        /*
+            https://github.com/crab-cr/php-strtotime
+
+            G	эра (в английской локализации — AD и BC)	н.э.
+            y	год (4-х значное число)	2020
+            yy	год (последние 2 цифры)	20
+            yyyy	год (4-х значное число)	2020
+            M	номер месяца (без лидирующих нулей)	8
+            MM	номер месяца (с лидирующими нулями, если порядковый номер месяца < 10)	04
+            MMM	трехбуквенное сокращение месяца (в соответствии с локализацией)	янв
+            MMMM	полное название месяца	Июнь
+            w	неделя в году (без лидирующих нулей)	4
+            ww	неделя в году (с лидирующими нулями)	04
+            W	неделя в месяце (без лидирующих нулей)	3
+            WW	неделя в месяце (с лидирующим нулем)	03
+            D	день в году	67
+            d	день месяца (без лидирующих нулей)	9
+            dd	день месяца (с лидирующими нулями)	09
+            F	день недели в месяце (без лидирующих нулей)	9
+            FF	день недели в месяце (с лидирующими нулями)	09
+            E	день недели (сокращение)	Вт
+            EEEE	день недели (полностью)	пятница
+            u	номер дня недели (без лидирующих нулей)	5
+            uu	номер дня недели (с лидирующими нулями)	05
+            a	маркер AM/PM	AM
+            H	часы в 24-часовом формате без лидирующих нулей	6
+            HH	часы в 24-часовом формате с лидирующим нулем	06
+            k	количество часов в 24-часовом формате	18
+            K	количество часов в 12-часовом формате	6
+            h	время в 12-часовом формате без лидирующих нулей	6
+            hh	время в 12-часовом формате с лидирующим нулем	06
+            m	минуты без лидирующих нулей	32
+            mm	минуты с лидирующим нулем	32
+            s	секунды без лидирующих нулей	11
+            ss	секунды с лидирующим нулем	11
+            S	миллисекунды	297
+            z	часовой пояс	EET
+            Z	часовой пояс в формате RFC 822	300
+
+         * dd-MM-yyyy	01-11-2020
+         * yyyy-MM-dd	2019-10-01
+         * HH:mm:ss.SSS	23:59.59.999
+         * yyyy-MM-dd HH:mm:ss	2018-11-30 03:09:02
+         * yyyy-MM-dd HH:mm:ss.SSS	2016-03-01 01:20:47.999
+         * yyyy-MM-dd HH:mm:ss.SSS Z	2013-13-13 23:59:59.999 +0100
+         */
 
         //Некоторые форматы как PHP
         switch (format) {
@@ -541,18 +590,19 @@ public class AgtyUtils {
      * //123,bbb
      * String implode = func.implode(hm, ',');
      */
-    public static String implode(HashMap collect, String glue) {
-        String returns = "";
+    public static String implode(HashMap<String, String> collect, String glue) {
+        StringBuilder returns = new StringBuilder();
 
         for (Object key : collect.keySet()) {
-            returns += collect.get(key) + glue;
+            returns.append(collect.get(key));
+            returns.append(glue);
         }
 
         if (returns.length() > 0) {
-            returns = sub_str(returns, glue.length());
+            returns.setLength(returns.length() - glue.length());
         }
 
-        return returns;
+        return returns.toString();
     }
 
     /**
@@ -565,6 +615,16 @@ public class AgtyUtils {
     public static int rand(int min, int max) {
         max -= min;
         return (int) (Math.random() * ++max) + min;
+    }
+
+    /**
+     * Проверяет наличие данных в строке.
+     *
+     * @param string строка.
+     * @return true если строка есть и она не пустая.
+     */
+    public static boolean stringIsSet(String string) {
+        return string != null && !string.trim().isEmpty();
     }
 }
 

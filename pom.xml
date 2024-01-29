@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- Развертывание в репе https://javarush.com/quests/lectures/questservlets.level02.lecture04 -->
+    <!-- Упаковка с зависимостями https://itnotes.github.io/posts/2015/08/19/maven-create-zip-with-dependencies.html -->
+
+    <groupId>org.agty</groupId>
+    <artifactId>org.agty.utils</artifactId>
+    <version>1.7.1</version>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>elf.agty.maven</id>
+            <distributionManagement>
+                <repository>
+                    <id>elf.agty.maven</id>
+                    <url>dav:http://maven.agty.elf/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>192.168.21.21</id>
+            <distributionManagement>
+                <repository>
+                    <id>192.168.21.21</id>
+                    <url>scp://192.168.21.21/AGTY/work/repository/appdir/AgtyUtils/</url>
+                </repository>
+            </distributionManagement>
+        </profile>
+    </profiles>
+
+
+    <!--<distributionManagement>
+        &lt;!&ndash;<repository>
+            <id>elf.agty.maven</id>
+            <url>dav:http://maven.agty.elf/</url>
+        </repository>&ndash;&gt;
+
+        <snapshotRepository>
+            <id>192.168.21.21</id>
+            <url>scp://192.168.21.21/AGTY/work/repository/appdir/AgtyUtils/</url>
+        </snapshotRepository>
+    </distributionManagement>-->
+
+
+   <repositories>
+        <repository>
+            <id>elf.agty.maven</id>
+            <url>dav:http://maven.agty.elf/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.3.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>3.6.1</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <!--Позволяет отправлять (деплоить) на WEBDAV-->
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav-jackrabbit</artifactId>
+                <version>3.5.2</version>
+            </extension>
+            <extension>
+                <!--Позволяет отправлять (деплоить) на SSH-->
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-ssh</artifactId>
+                <version>3.5.3</version>
+            </extension>
+
+        </extensions>
+
+        <plugins>
+            <plugin>
+                <!--Позволяет запускать скрипт-->
+                <!--sshexec wagon-maven-plugin https://www.mojohaus.org/wagon-maven-plugin/usage.html -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution><!-- Run our version calculation script -->
+                        <id>Version Calculation</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <!--Если не указать workingDirectory рез-ты скинуться в директорию проекта -->
+                            <workingDirectory>/home/agarty/blank/</workingDirectory>
+                            <executable>/home/agarty/blank/test</executable>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>-->
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>2.22.2</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.10.1</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+</project>
